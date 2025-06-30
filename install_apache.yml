@@ -1,0 +1,19 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: update repository index
+    pacman:
+      update_cache: yes
+
+  - name: install apache2 package
+    pacman:
+      name: apache
+      state: latest
+      
+  - name: installing tmux
+    pacman:
+      name: tmux
+      state: latest
