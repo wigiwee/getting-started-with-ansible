@@ -4,16 +4,49 @@
   become: true
   tasks:
 
+# for arch
   - name: update repository index
     pacman:
       update_cache: yes
+    when: ansible_distribution == "Archlinux"
 
   - name: install apache2 package
     pacman:
       name: apache
       state: latest
+    when: ansible_distribution == "Archlinux"
       
   - name: installing tmux
     pacman:
       name: tmux
       state: latest
+    when: ansible_distribution == "Archlinux"
+
+  - name: installing firwalld
+    pacman: 
+      name: firewalld
+    when: ansible_distribution == "Archlinux"
+
+# for mint
+  - name: update repository index
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Linux Mint"
+
+  - name: install apache2 package
+    apt:
+      name: apache2
+      state: latest
+    when: ansible_distribution == "Linux Mint"
+      
+  - name: installing tmux
+    apt:
+      name: tmux
+      state: latest
+    when: ansible_distribution == "Linux Mint"
+
+  - name: installing firewalld
+    apt:
+      name: firewalld
+    when: ansible_distribution == "Linux Mint"
+
