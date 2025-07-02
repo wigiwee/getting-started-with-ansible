@@ -44,6 +44,15 @@
       state: latest
     when: ansible_distribution == "Archlinux"
 
+  - name: copy default html file for site
+    tags: apache,apache2
+    copy:
+      src: index.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
 - hosts: db_servers
   become: true
   tasks:
