@@ -1,5 +1,11 @@
-192.168.56.101 apache_package=apache php_package=php firewall_package=firewalld
-192.168.56.113 apache_package=apache php_package=php firewall_package=firewalld
-192.168.56.116 apache_package=apache php_package=php firewall_package=firewalld
-192.168.56.110 apache_package=apache2 php_package=php firewall_package=firewalld
-192.168.56.112 apache_package=apache php_package=php firewall_package=firewalld
+[web_servers]
+192.168.56.101 
+192.168.56.110
+
+[db_servers]
+192.168.56.113
+192.168.56.116
+
+[file_servers]
+192.168.56.112
+192.168.56.116

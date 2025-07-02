@@ -1,0 +1,65 @@
+---
+
+
+# updating all packages on all the hosts/servers
+- hosts: all
+  become: true
+  pre_tasks:               # these pre_tasks will be executed before tasks
+
+  - name: install updates (mint)
+    apt:
+      upgrade: dist 
+      update_cache: yes
+    when: ansible_distribution == "Linux Mint"
+
+  - name: install updates (arch)
+    pacman:
+      update_cache: yes
+    when: ansible_distribution == "Archlinux"
+
+# installing apache and php on web_servers group hosts/servers 
+- hosts: web_servers
+  become: true
+  tasks: 
+
+  - name: install apache and php for ubuntu servers
+    apt:
+      name:
+        - apache2
+        - php
+        - firewalld
+      state: latest
+    when: ansible_distribution == "Linux Mint"
+
+  - name: install apache and php for arch servers 
+    pacman:
+      name:
+        - apache
+        - php
+        - firewalld
+      state: latest
+    when: ansible_distribution == "Archlinux"
+
+- hosts: db_servers
+  become: true
+  tasks:
+  - name: install mariadb package on ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Linux Mint"
+
+  - name: install mariadb package on arch
+    pacman:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Archlinux"
+
+- hosts: file_servers
+  become: true
+  tasks:
+  - name: install samba package
+    package:
+      name: samba   # the name of the package is same across pacman and apt
+      state: latest
+
