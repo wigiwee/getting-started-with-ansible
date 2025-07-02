@@ -7,12 +7,14 @@
   pre_tasks:               # these pre_tasks will be executed before tasks
 
   - name: install updates (mint)
+    tags: always
     apt:
       upgrade: dist 
       update_cache: yes
     when: ansible_distribution == "Linux Mint"
 
   - name: install updates (arch)
+    tags: always
     pacman:
       update_cache: yes
     when: ansible_distribution == "Archlinux"
@@ -22,7 +24,8 @@
   become: true
   tasks: 
 
-  - name: install apache and php for ubuntu servers
+  - name: install apache and php for mint servers
+    tags: apache,apache2,mint 
     apt:
       name:
         - apache2
@@ -32,6 +35,7 @@
     when: ansible_distribution == "Linux Mint"
 
   - name: install apache and php for arch servers 
+    tags: apache,arch
     pacman:
       name:
         - apache
@@ -43,13 +47,16 @@
 - hosts: db_servers
   become: true
   tasks:
-  - name: install mariadb package on ubuntu
+
+  - name: install mariadb package on mint servers
+    tags: mint,db,mariadb
     apt:
       name: mariadb-server
       state: latest
     when: ansible_distribution == "Linux Mint"
 
   - name: install mariadb package on arch
+    tags: db,arch,mariadb
     pacman:
       name: mariadb
       state: latest
@@ -58,7 +65,9 @@
 - hosts: file_servers
   become: true
   tasks:
+
   - name: install samba package
+    tags: samba
     package:
       name: samba   # the name of the package is same across pacman and apt
       state: latest
