@@ -19,6 +19,35 @@
       update_cache: yes
     when: ansible_distribution == "Archlinux"
 
+
+# creating a new user on all the servers
+- hosts: all
+  become: true
+  tasks:
+  - name: create wigiwee user
+    tags: always
+    user:
+      name: wigiwee
+      group: root
+
+ # adding ssh key for the new user (public key)
+  - name: add ssh key for wigiwee
+    tags: always
+    authorized_key:
+      user: wigiwee
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCMVpM8iQrpAnZwJSxKNB8uyDEsldYyLnSHeEHg7TvBPUrddY9NmSgCVYjn0bI6qZ23/VIq8g9kQq1gRN6fe1asbrw/wvWWWqJYWme9fMdvAJ0GdL2LouBMF6dbBBgI6/U0iC7LMUblfcBRKY+HpH1kZQbiPwKst2S5XsP6pNSxwViJBOQ/7SrSrnhik2+YcPD9Vb5E7wbCB3Letq0Uw/mQDgV1sR6d/9jDHD6o4hW9mr9lIVFHgZCOiWMVrpfddPljoW60bS5SGTsY+PXn8/8PSE2Vr3xNsS6SHnrCfaKmo0hBOG8XZCvbOHOWcf6TF0nMhe39wEXaZp0oK0uIdBsfbkilKl/fuDMqKm3qBEHO7FKRxD4uHfslqQ0/eAVX9swP63X3eF8A+gEipvxsdcl14T3nk/4nAHyfOys1hse57W38lhTiph82vni/tHW90Y+nA8/Ru6HeQKx4BgFj+2oGJSPo5tjX8mLgHKkqJUv/LdeD9LiLfXOm91B7aK02GAk= happypotter@archlinux"
+
+ # configuring new user permissions with by copying sudoer file
+  - name: add sudoer file for wigiwee
+    tags: always
+    copy:
+      src: sudoer_wigiwee
+      dest: /etc/sudoers.d/wigiwee
+      owner: root
+      group: root
+      mode: 0440
+
+
 - hosts: workstations
   become: true
   tasks:
@@ -35,6 +64,7 @@
         mode: 0755
         owner: root
         group: root
+
 
 # installing apache and php on web_servers group hosts/servers 
 - hosts: web_servers
@@ -97,6 +127,7 @@
       group: root
       mode: 0644
 
+
 - hosts: db_servers
   become: true
   tasks:
@@ -114,6 +145,7 @@
       name: mariadb
       state: latest
     when: ansible_distribution == "Archlinux"
+
 
 - hosts: file_servers
   become: true
