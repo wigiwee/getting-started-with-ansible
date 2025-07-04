@@ -77,7 +77,7 @@
       state: latest
     when: ansible_distribution == "Archlinux"
 
-  # starting and enableling the apache service
+  # starting and enableling the apache service (mint)
   - name: start apache (in mint)
     tags: apache2,apache,mint
     service:
@@ -86,21 +86,37 @@
       enabled: yes
     when: ansible_distribution == "Linux Mint"
 
+  # starting and enableling the apache service (arch)
+  - name: start apache (in arch)
+    tags: apache2,apache,arch
+    service:
+      name: httpd 
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Archlinux"
+
   # making changes to the apache configuration file
   - name: change KeepAliveTimout configuration variable
-    tags: apache,apache2,mint
+    tags: apache,apache2
     lineinfile:
       path: /etc/apache2/apache2.conf
       regexp: '^KeepAliveTimeout'
       line: KeepAliveTimeout 10
-    when: ansible_distribution == "Linux Mint"
     register: apacheState    # this is a variable which stores the state of the service
 
-  # restarting the apache service
-  - name: restart apache service
+  # restarting the apache service (mint)
+  - name: restart apache service (in mint)
     tags: apache,apache2,mint
     service:
       name: apache2
+      state: restarted
+    when: apacheState.changed   # checking if the apacheState is changed or not
+
+  # restarting the apache service (arch)
+  - name: restart apache service (in arch)
+    tags: apache,apache2,mint
+    service:
+      name: httpd
       state: restarted
     when: apacheState.changed   # checking if the apacheState is changed or not
 

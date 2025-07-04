@@ -1,0 +1,47 @@
+---
+
+
+# updating all packages on all the hosts/servers
+- hosts: all
+  become: true
+  pre_tasks:               # these pre_tasks will be executed before tasks
+
+  - name: update repo cache(mint)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Linux Mint"
+
+  - name:  update repo cache(arch)
+    tags: always
+    pacman:
+      update_cache: yes
+    changed_when: false                           # we will not see changed=1 every time the server is updated
+    when: ansible_distribution == "Archlinux"
+
+
+- hosts: all
+  become : true
+  roles:
+    - base
+
+- hosts: workstations
+  become: true
+  roles:
+    - workstations
+
+- hosts: web_servers
+  become: true
+  roles:
+    - web_servers
+
+- hosts: db_servers
+  become: true
+  roles:
+    - db_servers
+
+- hosts: file_servers
+  become: true
+  roles:
+    - file_servers

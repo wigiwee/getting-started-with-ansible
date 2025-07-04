@@ -1,0 +1,13 @@
+- name: install mariadb package on mint servers
+  tags: mint,db,mariadb
+  apt:
+    name: mariadb-server
+    state: latest
+  when: ansible_distribution == "Linux Mint"
+
+- name: install mariadb package on arch
+  tags: db,arch,mariadb
+  pacman:
+    name: mariadb
+    state: latest
+  when: ansible_distribution == "Archlinux"

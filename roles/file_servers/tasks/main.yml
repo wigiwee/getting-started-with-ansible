@@ -1,0 +1,6 @@
+- name: install samba package
+  tags: samba
+  package:
+    name: samba   # the name of the package is same across pacman and apt
+    state: latest
+
