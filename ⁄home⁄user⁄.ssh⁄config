@@ -1,0 +1,23 @@
+Host 192.168.56.101
+    User server1
+    IdentityFile ~/.ssh/ansible
+
+Host 192.168.56.113
+    User server2
+    IdentityFile ~/.ssh/ansible
+
+Host 192.168.56.116
+    User server3
+    IdentityFile ~/.ssh/ansible
+
+Host 192.168.56.110
+    User server4
+    IdentityFile ~/.ssh/ansible
+
+Host 192.168.56.112
+    User server5
+    IdentityFile ~/.ssh/ansible
+
+Host 192.168.56.1
+    User happypotter
+    IdentityFile ~/.ssh/ansible
