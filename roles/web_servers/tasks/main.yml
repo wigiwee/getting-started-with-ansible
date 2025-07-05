@@ -1,40 +1,19 @@
 - name: install apache and php for mint servers
-  tags: apache,apache2,mint
-  apt:
+  tags: apache,apache2
+  package:
     name:
-      - apache2
-      - php
-      - firewalld
+      - "{{ apache_package_name }}" 
+      - "{{ php_package_name }}"
+      - "{{ firewalld_package_name }}"
     state: latest
-  when: ansible_distribution == "Linux Mint"
-
-- name: install apache and php for arch servers 
-  tags: apache,arch
-  pacman:
-    name:
-      - apache
-      - php
-      - firewalld
-    state: latest
-  when: ansible_distribution == "Archlinux"
 
 # starting and enableling the apache service
-- name: start apache (in mint)
-  tags: apache2,apache,mint
+- name: start and enabling apahe
+  tags: apache2,apache
   service:
-    name: apache2
+    name: "{{ apache_service }}" 
     state: started
     enabled: yes
-  when: ansible_distribution == "Linux Mint"
-
-# starting and enableling the apache service
-- name: start apache (in arch)
-  tags: apache2,apache,arch
-  service:
-    name: httpd 
-    state: started
-    enabled: yes
-  when: ansible_distribution == "Archlinux"
 
   # making changes to the apache configuration file
 - name: change KeepAliveTimout configuration variable
@@ -42,26 +21,18 @@
   lineinfile:
     path: /etc/apache2/apache2.conf
     regexp: '^KeepAliveTimeout'
-    line: KeepAliveTimeout 10
+    line: KeepAliveTimeout 4 
   when: ansible_distribution == "Linux Mint"
-  register: apacheState    # this is a variable which stores the state of the service
+  notify: restart_apache
+#  register: apacheState    # this is a variable which stores the state of the service
 
-# restarting the apache service (mint)
-- name: restart apache service
-  tags: apache,apache2,mint
-  service:
-    name: apache2
-    state: restarted
-  when: apacheState.changed and ansible_distribution == "Linux Mint"   # checking if the apacheState is changed or not
-
-  
-# restarting the apache service (arch)
-- name: restart apache service
-  tags: apache,apache2,arch
-  service:
-    name: httpd 
-    state: restarted
-  when: apacheState.changed  and ansible_distribution == "Archlinux"   # checking if the apacheState is changed or not
+# restarting the apache service
+#- name: restart apache service
+#  tags: apache,apache2
+#  service:
+#    name: "{{ apache_service }}" 
+#    state: restarted
+#  when: apacheState.changed   # checking if the apacheState is changed or not
 
 - name: copy default html file for site
   tags: apache,apache2
